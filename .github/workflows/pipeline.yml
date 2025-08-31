@@ -24,10 +24,8 @@ jobs:
       run: npm i -g pnpm  
     - name: 'Installing deps'    
       run: pnpm i
-#    - name: 'Test'
-#      run: pnpm test
     - name: 'Build'
-      run: pnpm build #--if-present
+      run: pnpm build
     - name: 'Deploy'
       uses: peaceiris/actions-gh-pages@v4
       with:
