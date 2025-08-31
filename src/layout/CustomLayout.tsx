@@ -191,7 +191,7 @@ const CustomLayout = ({ children }: ICustomLayoutProps) => {
   return (
     <ProLayout
       logo={logo}
-      title="React Pipeline"
+      title="Simple Ecom"
       style={{ minHeight: '100vh' }}
       fixSiderbar
       location={location}
