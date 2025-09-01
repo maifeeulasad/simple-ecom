@@ -1,36 +1,56 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import type { MenuDataItem } from '@ant-design/pro-components';
-import { PageContainer, ProLayout } from '@ant-design/pro-components';
+import { ProLayout } from '@ant-design/pro-components';
 import { useLocation, Link } from 'react-router-dom';
-import { notification, Input, Select, Form, Button, Affix } from 'antd';
+import { notification, Input, Select, Form, Button, Affix, Space, Badge, Row, Col } from 'antd';
 import { copyText } from 'copy-clipboard-js';
 import CopyOutlined from '@ant-design/icons/CopyOutlined';
-import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { 
+  ReloadOutlined, 
+  SearchOutlined, 
+  ShoppingCartOutlined,
+  HeartOutlined,
+  SwapOutlined,
+  UserOutlined,
+  LaptopOutlined,
+  MobileOutlined,
+  DesktopOutlined
+} from '@ant-design/icons';
 import logo from './logo.svg';
 
 const defaultMenus: MenuDataItem[] = [
   {
+    path: '/landing',
+    name: 'Laptops',
+    icon: <LaptopOutlined />,
+  },
+  {
+    path: '/mobiles',
+    name: 'Mobiles',
+    icon: <MobileOutlined />,
+  },
+  {
+    path: '/desktops',
+    name: 'Desktops', 
+    icon: <DesktopOutlined />,
+  },
+  {
     path: '/',
-    name: 'Pages',
+    name: 'More Categories',
     children: [
       {
         path: '/page2',
-        name: 'Page 2',
+        name: 'Gaming',
       },
       {
         path: '/page1',
-        name: 'Page 1 - Fallback to landing',
+        name: 'Accessories',
       },
       {
         path: '/page3',
-        name: 'Page 3',
+        name: 'Components',
       },
     ],
-  },
-  {
-    path: '/landing',
-    name: 'Landing Page',
-    // hideInMenu: true, // hidden from menu
   },
 ];
 
@@ -84,7 +104,7 @@ const CustomFooterMenu = ({ collapsed }: ICustomFooterMenuProps) => {
 };
 
 const SearchBar = () => {
-  const sections = ['whole', 'section1', 'section2', 'section3'];
+  const categories = ['All Products', 'Laptops', 'Mobiles', 'Desktops', 'Gaming', 'Accessories'];
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -96,70 +116,93 @@ const SearchBar = () => {
 
   const onValuesChange = (changedValues: any) => {
     console.log('Form changed:', changedValues);
-    const { range, keyword } = changedValues;
-    console.log('Search triggered with:', { range, keyword });
-    setResetVisibility(range === undefined && (keyword === undefined || keyword === ''));
+    const { category, keyword } = changedValues;
+    console.log('Search triggered with:', { category, keyword });
+    setResetVisibility(category === undefined && (keyword === undefined || keyword === ''));
   };
 
   return (
-    <Form
-      form={form}
-      layout="inline"
-      onValuesChange={onValuesChange}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="on"
-      style={{
-        display: 'flex',
-        padding: 8,
-        backdropFilter: 'blur(10px)',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      }}
-    >
-      <Form.Item
-        name="range"
-        rules={[{ required: true, message: 'Please select a range!' }]}
-      >
-        <Select
-          defaultValue={sections[0] || ''}
-          options={sections.map((section) => ({ label: section, value: section }))}
-          style={{ width: 120 }}
-        />
-      </Form.Item>
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center',
+      padding: '8px 16px',
+      backdropFilter: 'blur(10px)',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      borderBottom: '1px solid #f0f0f0',
+    }}>
+      <Row style={{ width: '100%' }} justify="space-between" align="middle" gutter={16}>
+        <Col flex="1">
+          <Form
+            form={form}
+            layout="inline"
+            onValuesChange={onValuesChange}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="on"
+            style={{ display: 'flex', width: '100%', gap: 8 }}
+          >
+            <Form.Item
+              name="category"
+              style={{ marginBottom: 0, height: '100%' }}
+            >
+              <Select
+                defaultValue={categories[0] || ''}
+                options={categories.map((category) => ({ label: category, value: category }))}
+                style={{ width: 140, height: '100%' }}
+                placeholder="Category"
+              />
+            </Form.Item>
 
-      <Form.Item
-        style={{ flex: 1 }}
-        name="keyword"
-        rules={[{ required: true, message: 'Please input your keyword!' }]}
-      >
-        <Input
-          placeholder="Search..."
-          style={{ width: '100%' }}
-        />
-      </Form.Item>
-      <Form.Item
-        hidden={resetVisibility}
-      >
-        <Button
-          style={{
-            background: '#1677ff',
-          }}
-          icon={<ReloadOutlined />}
-          type="primary"
-          onClick={() => form.resetFields()}
-        />
-      </Form.Item>
-      <Form.Item>
-        <Button
-          style={{
-            background: '#1677ff',
-          }}
-          icon={<SearchOutlined />}
-          type="primary"
-          htmlType="submit"
-        />
-      </Form.Item>
-    </Form>
+            <Form.Item
+              style={{ flex: 1, marginBottom: 0 }}
+              name="keyword"
+            >
+              <Input
+                placeholder="Search for laptops, mobiles, accessories..."
+                style={{ width: '100%' }}
+                suffix={
+                  <Button
+                    icon={<SearchOutlined />}
+                    type="primary"
+                    htmlType="submit"
+                    style={{ border: 'none', boxShadow: 'none' }}
+                  />
+                }
+              />
+            </Form.Item>
+            
+            {!resetVisibility && (
+              <Form.Item>
+                <Button
+                  icon={<ReloadOutlined />}
+                  onClick={() => form.resetFields()}
+                  style={{ border: 'none' }}
+                />
+              </Form.Item>
+            )}
+          </Form>
+        </Col>
+        
+        <Col>
+          <Space size="large">
+            <Button type="text" icon={<HeartOutlined />} style={{ color: '#666' }}>
+              <span>Wishlist</span>
+            </Button>
+            <Button type="text" icon={<SwapOutlined />} style={{ color: '#666' }}>
+              <span>Compare (0)</span>
+            </Button>
+            <Badge count={0} showZero>
+              <Button type="text" icon={<ShoppingCartOutlined />} style={{ color: '#666' }}>
+                <span>Cart</span>
+              </Button>
+            </Badge>
+            <Button type="text" icon={<UserOutlined />} style={{ color: '#666' }}>
+              <span>Account</span>
+            </Button>
+          </Space>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
@@ -191,7 +234,7 @@ const CustomLayout = ({ children }: ICustomLayoutProps) => {
   return (
     <ProLayout
       logo={logo}
-      title="Simple Ecom"
+      title="TechStore"
       style={{ minHeight: '100vh' }}
       fixSiderbar
       location={location}
@@ -203,29 +246,28 @@ const CustomLayout = ({ children }: ICustomLayoutProps) => {
       subMenuItemRender={subMenuItemRender}
       // eslint-disable-next-line
       menuFooterRender={(props) => <CustomFooterMenu {...props} />}
+      headerContentRender={() => null} // Remove the default header content
     >
-      <PageContainer header={{ title: true }}>
-        <Affix offsetTop={0}>
-          <div style={{ position: 'relative' }}>
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: 4,
-                width: `${scrollPercent}%`,
-                background: '#1890ff',
-                transition: 'width 0.1s ease-out',
-                zIndex: 9999,
-              }}
-            />
-            <SearchBar />
-          </div>
-        </Affix>
-        <div style={{ padding: 16, background: 'transparent' }}>
-          {children}
+      <Affix offsetTop={0}>
+        <div style={{ position: 'relative', zIndex: 1000 }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              height: 4,
+              width: `${scrollPercent}%`,
+              background: '#1890ff',
+              transition: 'width 0.1s ease-out',
+              zIndex: 9999,
+            }}
+          />
+          <SearchBar />
         </div>
-      </PageContainer>
+      </Affix>
+      <div style={{ background: '#f5f5f5', minHeight: 'calc(100vh - 120px)' }}>
+        {children}
+      </div>
     </ProLayout>
   );
 };
